@@ -2,52 +2,128 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Predicción de Partidos de Fútbol</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f2f2f2;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f9f9f9;
       color: #333;
-      display: flex; flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    header {
-      background: #1e90ff;
-      color: white;
-      width: 100%;
-      text-align: center;
-      padding: 1rem 0;
-    }
-    main {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      max-width: 500px;
       text-align: center;
     }
-    footer {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #777;
+    select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    #resultado {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Predicción de Partidos</h1>
-  </header>
-  <main>
-    <p>¡Bienvenido a la IA de predicción de resultados de fútbol!</p>
-    <p>Este proyecto usa inteligencia artificial para predecir el resultado de partidos en base a datos históricos.</p>
-    <p>Próximamente podrás subir datos y ver las predicciones aquí.</p>
-  </main>
-  <footer>
-    Creado por kelvin22e
-  </footer>
+  <h1>Predicción simple de partidos de fútbol</h1>
+  <p>Selecciona dos equipos para predecir el resultado.</p>
+  
+  <div>
+    <select id="equipo1"></select>
+    <select id="equipo2"></select>
+  </div>
+  <button onclick="predecir()">Predecir resultado</button>
+  
+  <div id="resultado"></div>
+  
+  <script>
+    // Lista de equipos y su "fuerza" relativa (1-100, ejemplo simple)
+    const equipos = [
+      {nombre: "Brasil", fuerza: 95},
+      {nombre: "Argentina", fuerza: 90},
+      {nombre: "Alemania", fuerza: 88},
+      {nombre: "Francia", fuerza: 92},
+      {nombre: "España", fuerza: 89},
+      {nombre: "Inglaterra", fuerza: 87},
+      {nombre: "Italia", fuerza: 85},
+      {nombre: "México", fuerza: 78},
+      {nombre: "Colombia", fuerza: 76},
+      {nombre: "Uruguay", fuerza: 80},
+      {nombre: "Portugal", fuerza: 83},
+      {nombre: "Países Bajos", fuerza: 82},
+      {nombre: "Bélgica", fuerza: 84},
+      {nombre: "Croacia", fuerza: 77},
+      {nombre: "Chile", fuerza: 75},
+      {nombre: "Perú", fuerza: 70},
+      {nombre: "Polonia", fuerza: 74},
+      {nombre: "Suecia", fuerza: 72},
+      {nombre: "Rusia", fuerza: 73},
+      {nombre: "Japón", fuerza: 68},
+      {nombre: "Senegal", fuerza: 69},
+      {nombre: "Estados Unidos", fuerza: 67},
+      {nombre: "Turquía", fuerza: 66},
+      {nombre: "Australia", fuerza: 65},
+      {nombre: "Irán", fuerza: 64},
+      {nombre: "Egipto", fuerza: 62},
+      {nombre: "Corea del Sur", fuerza: 63},
+      {nombre: "Suiza", fuerza: 71},
+      {nombre: "Dinamarca", fuerza: 70},
+      {nombre: "Noruega", fuerza: 60},
+    ];
+    
+    const select1 = document.getElementById("equipo1");
+    const select2 = document.getElementById("equipo2");
+    
+    // Llenar los selects con los equipos
+    equipos.forEach(equipo => {
+      let option1 = document.createElement("option");
+      option1.value = equipo.nombre;
+      option1.textContent = equipo.nombre;
+      select1.appendChild(option1);
+      
+      let option2 = document.createElement("option");
+      option2.value = equipo.nombre;
+      option2.textContent = equipo.nombre;
+      select2.appendChild(option2);
+    });
+    
+    function predecir() {
+      const equipoA = equipos.find(e => e.nombre === select1.value);
+      const equipoB = equipos.find(e => e.nombre === select2.value);
+      
+      if (equipoA.nombre === equipoB.nombre) {
+        alert("Por favor, selecciona dos equipos diferentes.");
+        return;
+      }
+      
+      // Cálculo simple basado en fuerzas
+      const totalFuerza = equipoA.fuerza + equipoB.fuerza;
+      const probA = equipoA.fuerza / totalFuerza;
+      const probB = equipoB.fuerza / totalFuerza;
+      
+      // Probabilidad de empate fija 20%
+      const empate = 0.2;
+      
+      // Ajustamos probabilidades para empate
+      const probAjustadaA = probA * (1 - empate);
+      const probAjustadaB = probB * (1 - empate);
+      
+      // Generar resultado basado en probabilidades
+      const rand = Math.random();
+      
+      let resultado = "";
+      if (rand < probAjustadaA) {
+        resultado = `${equipoA.nombre} gana`;
+      } else if (rand < probAjustadaA + empate) {
+        resultado = "Empate";
+      } else {
+        resultado = `${equipoB.nombre} gana`;
+      }
+      
+      document.getElementById("resultado").textContent = `Resultado probable: ${resultado}`;
+    }
+  </script>
 </body>
 </html>
