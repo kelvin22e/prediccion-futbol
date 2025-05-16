@@ -1,5 +1,5 @@
 function cargarPartidosDeHoy() {
-  const API_TOKEN = 'TU_API_KEY_AQUI';
+  const API_TOKEN = '0102ba8c03cf42c1b7b1e9217bc9501e';
 
   fetch('https://api.football-data.org/v4/matches?dateFrom=today&dateTo=today', {
     headers: { 'X-Auth-Token': API_TOKEN }
