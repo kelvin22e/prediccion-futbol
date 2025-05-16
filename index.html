@@ -2,101 +2,204 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Predicción de Partidos</title>
+  <title>Predicción de Partidos 2024/2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+      background: #f0f0f0;
+    }
+    select, button {
+      font-size: 16px;
+      padding: 6px 10px;
+      margin: 10px;
+    }
+    #estadisticas {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    .stats-box {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      width: 250px;
+      text-align: left;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
-  <h1>Predicción de Partidos de Fútbol</h1>
+<body>
 
-  <label for="equipo1">Equipo 1:</label>
+  <h1>Predicción de Partidos de Fútbol 2024/2025</h1>
+
+  <label for="liga">Selecciona la Liga:</label>
+  <select id="liga"></select><br/>
+
+  <label for="equipo1">Equipo Local:</label>
   <select id="equipo1"></select>
 
-  <label for="equipo2">Equipo 2:</label>
-  <select id="equipo2"></select>
+  <label for="equipo2">Equipo Visitante:</label>
+  <select id="equipo2"></select><br/>
 
   <button onclick="predecir()">Predecir Resultado</button>
 
   <h2 id="resultado"></h2>
+
   <div id="estadisticas"></div>
 
-  <script>
-    const equipos = [
-      { nombre: "Real Madrid", fuerza: 95, estadisticas: { jugados: 10, victorias: 8, empates: 1, derrotas: 1, golesFavor: 25, golesContra: 7 }},
-      { nombre: "Barcelona", fuerza: 90, estadisticas: { jugados: 10, victorias: 7, empates: 2, derrotas: 1, golesFavor: 21, golesContra: 9 }},
-      { nombre: "Manchester City", fuerza: 93, estadisticas: { jugados: 10, victorias: 9, empates: 0, derrotas: 1, golesFavor: 27, golesContra: 8 }},
-      { nombre: "Bayern Munich", fuerza: 91, estadisticas: { jugados: 10, victorias: 8, empates: 1, derrotas: 1, golesFavor: 24, golesContra: 10 }},
-      { nombre: "Liverpool", fuerza: 88, estadisticas: { jugados: 10, victorias: 6, empates: 2, derrotas: 2, golesFavor: 20, golesContra: 12 }},
-      { nombre: "PSG", fuerza: 87, estadisticas: { jugados: 10, victorias: 7, empates: 1, derrotas: 2, golesFavor: 22, golesContra: 11 }},
-      { nombre: "Juventus", fuerza: 85, estadisticas: { jugados: 10, victorias: 6, empates: 2, derrotas: 2, golesFavor: 18, golesContra: 10 }},
-      { nombre: "Chelsea", fuerza: 84, estadisticas: { jugados: 10, victorias: 5, empates: 3, derrotas: 2, golesFavor: 17, golesContra: 13 }},
-      { nombre: "Arsenal", fuerza: 82, estadisticas: { jugados: 10, victorias: 6, empates: 2, derrotas: 2, golesFavor: 19, golesContra: 14 }},
-      { nombre: "Atlético Madrid", fuerza: 83, estadisticas: { jugados: 10, victorias: 5, empates: 3, derrotas: 2, golesFavor: 16, golesContra: 12 }}
-    ];
+<script>
+  const ligas = {
+    "La Liga": [
+      {nombre:"Real Madrid", pj:10, g:7, e:2, p:1, gf:23, gc:9},
+      {nombre:"Barcelona", pj:10, g:6, e:3, p:1, gf:21, gc:10},
+      {nombre:"Atlético Madrid", pj:10, g:5, e:4, p:1, gf:18, gc:12},
+      {nombre:"Sevilla", pj:10, g:4, e:3, p:3, gf:14, gc:13},
+      {nombre:"Real Sociedad", pj:10, g:4, e:2, p:4, gf:13, gc:15}
+    ],
+    "Premier League": [
+      {nombre:"Manchester City", pj:10, g:8, e:1, p:1, gf:27, gc:8},
+      {nombre:"Arsenal", pj:10, g:7, e:2, p:1, gf:22, gc:10},
+      {nombre:"Liverpool", pj:10, g:6, e:3, p:1, gf:21, gc:12},
+      {nombre:"Chelsea", pj:10, g:5, e:3, p:2, gf:18, gc:16},
+      {nombre:"Tottenham", pj:10, g:4, e:3, p:3, gf:17, gc:15}
+    ],
+    "Bundesliga": [
+      {nombre:"Bayern Munich", pj:10, g:7, e:2, p:1, gf:24, gc:11},
+      {nombre:"Borussia Dortmund", pj:10, g:6, e:3, p:1, gf:20, gc:12},
+      {nombre:"RB Leipzig", pj:10, g:5, e:3, p:2, gf:18, gc:14},
+      {nombre:"Bayer Leverkusen", pj:10, g:5, e:2, p:3, gf:16, gc:15},
+      {nombre:"Schalke 04", pj:10, g:3, e:3, p:4, gf:12, gc:16}
+    ],
+    "Serie A": [
+      {nombre:"Inter Milan", pj:10, g:6, e:3, p:1, gf:19, gc:10},
+      {nombre:"AC Milan", pj:10, g:6, e:2, p:2, gf:20, gc:11},
+      {nombre:"Juventus", pj:10, g:5, e:3, p:2, gf:17, gc:13},
+      {nombre:"Napoli", pj:10, g:5, e:3, p:2, gf:18, gc:14},
+      {nombre:"Roma", pj:10, g:4, e:4, p:2, gf:16, gc:15}
+    ],
+    "Ligue 1": [
+      {nombre:"Paris Saint-Germain", pj:10, g:7, e:2, p:1, gf:25, gc:9},
+      {nombre:"Lyon", pj:10, g:6, e:3, p:1, gf:20, gc:11},
+      {nombre:"Marseille", pj:10, g:5, e:3, p:2, gf:17, gc:14},
+      {nombre:"Monaco", pj:10, g:4, e:4, p:2, gf:15, gc:15},
+      {nombre:"Rennes", pj:10, g:3, e:5, p:2, gf:14, gc:16}
+    ],
+    "Primeira Liga": [
+      {nombre:"Porto", pj:10, g:7, e:2, p:1, gf:22, gc:10},
+      {nombre:"Benfica", pj:10, g:6, e:3, p:1, gf:20, gc:11},
+      {nombre:"Sporting CP", pj:10, g:5, e:3, p:2, gf:18, gc:13},
+      {nombre:"Braga", pj:10, g:4, e:4, p:2, gf:15, gc:14},
+      {nombre:"Vitória Guimarães", pj:10, g:3, e:5, p:2, gf:13, gc:16}
+    ],
+    "Eredivisie": [
+      {nombre:"Ajax", pj:10, g:8, e:1, p:1, gf:26, gc:9},
+      {nombre:"PSV Eindhoven", pj:10, g:7, e:2, p:1, gf:24, gc:10},
+      {nombre:"Feyenoord", pj:10, g:6, e:2, p:2, gf:22, gc:12},
+      {nombre:"AZ Alkmaar", pj:10, g:5, e:3, p:2, gf:19, gc:15},
+      {nombre:"Vitesse", pj:10, g:4, e:4, p:2, gf:15, gc:14}
+    ]
+  };
 
-    const equipo1Select = document.getElementById("equipo1");
-    const equipo2Select = document.getElementById("equipo2");
+  const ligaSelect = document.getElementById("liga");
+  const equipo1Select = document.getElementById("equipo1");
+  const equipo2Select = document.getElementById("equipo2");
 
-    equipos.forEach((equipo, index) => {
+  function llenarLigas() {
+    for (const liga in ligas) {
+      const option = document.createElement("option");
+      option.value = liga;
+      option.textContent = liga;
+      ligaSelect.appendChild(option);
+    }
+  }
+
+  function llenarEquipos() {
+    const liga = ligaSelect.value;
+    equipo1Select.innerHTML = "";
+    equipo2Select.innerHTML = "";
+
+    ligas[liga].forEach((equipo, i) => {
       const option1 = document.createElement("option");
-      const option2 = document.createElement("option");
-      option1.value = index;
-      option1.text = equipo.nombre;
-      option2.value = index;
-      option2.text = equipo.nombre;
+      option1.value = i;
+      option1.textContent = equipo.nombre;
       equipo1Select.appendChild(option1);
+
+      const option2 = document.createElement("option");
+      option2.value = i;
+      option2.textContent = equipo.nombre;
       equipo2Select.appendChild(option2);
     });
+  }
 
-    function predecir() {
-      const equipoA = equipos[equipo1Select.value];
-      const equipoB = equipos[equipo2Select.value];
+  function predecir() {
+    const liga = ligaSelect.value;
+    const equipoA = ligas[liga][equipo1Select.value];
+    const equipoB = ligas[liga][equipo2Select.value];
 
-      if (equipo1Select.value === equipo2Select.value) {
-        document.getElementById("resultado").innerText = "Selecciona dos equipos diferentes.";
-        document.getElementById("estadisticas").innerHTML = "";
-        return;
-      }
-
-      const probA = equipoA.fuerza / (equipoA.fuerza + equipoB.fuerza);
-      const random = Math.random();
-      let resultado = "";
-
-      if (random < probA) {
-        resultado = `Gana ${equipoA.nombre}`;
-      } else {
-        resultado = `Gana ${equipoB.nombre}`;
-      }
-
-      document.getElementById("resultado").innerText = resultado;
-      mostrarEstadisticas(equipoA, equipoB);
+    if (equipo1Select.value === equipo2Select.value) {
+      alert("Por favor, selecciona dos equipos diferentes.");
+      return;
     }
 
-    function mostrarEstadisticas(equipoA, equipoB) {
-      const html = `
-        <h3>Estadísticas</h3>
-        <div style="display: flex; justify-content: center; gap: 50px; text-align: left; margin-top: 20px;">
-          <div>
-            <strong>${equipoA.nombre}</strong><br>
-            PJ: ${equipoA.estadisticas.jugados}<br>
-            G: ${equipoA.estadisticas.victorias}<br>
-            E: ${equipoA.estadisticas.empates}<br>
-            P: ${equipoA.estadisticas.derrotas}<br>
-            GF: ${equipoA.estadisticas.golesFavor}<br>
-            GC: ${equipoA.estadisticas.golesContra}
-          </div>
-          <div>
-            <strong>${equipoB.nombre}</strong><br>
-            PJ: ${equipoB.estadisticas.jugados}<br>
-            G: ${equipoB.estadisticas.victorias}<br>
-            E: ${equipoB.estadisticas.empates}<br>
-            P: ${equipoB.estadisticas.derrotas}<br>
-            GF: ${equipoB.estadisticas.golesFavor}<br>
-            GC: ${equipoB.estadisticas.golesContra}
-          </div>
-        </div>
-      `;
-      document.getElementById("estadisticas").innerHTML = html;
+    const fuerzaA = equipoA.g + (equipoA.gf / equipoA.pj);
+    const fuerzaB = equipoB.g + (equipoB.gf / equipoB.pj);
+
+    const probA = fuerzaA / (fuerzaA + fuerzaB);
+    const random = Math.random();
+
+    let resultado = "";
+    if (random < probA) {
+      resultado = `Predicción: Gana ${equipoA.nombre}`;
+    } else {
+      resultado = `Predicción: Gana ${equipoB.nombre}`;
     }
-  </script>
+
+    document.getElementById("resultado").textContent = resultado;
+
+    mostrarEstadisticas(equipoA, equipoB);
+  }
+
+  function mostrarEstadisticas(equipoA, equipoB) {
+    const div = document.getElementById("estadisticas");
+    div.innerHTML = `
+      <div class="stats-box">
+        <h3>${equipoA.nombre}</h3>
+        <p>Partidos Jugados: ${equipoA.pj}</p>
+        <p>Ganados: ${equipoA.g}</p>
+        <p>Empates: ${equipoA.e}</p>
+        <p>Perdidos: ${equipoA.p}</p>
+        <p>Goles a Favor: ${equipoA.gf}</p>
+        <p>Goles en Contra: ${equipoA.gc}</p>
+      </div>
+      <div class="stats-box">
+        <h3>${equipoB.nombre}</h3>
+        <p>Partidos Jugados: ${equipoB.pj}</p>
+        <p>Ganados: ${equipoB.g}</p>
+        <p>Empates: ${equipoB.e}</p>
+        <p>Perdidos: ${equipoB.p}</p>
+        <p>Goles a Favor: ${equipoB.gf}</p>
+        <p>Goles en Contra: ${equipoB.gc}</p>
+      </div>
+    `;
+  }
+
+  ligaSelect.addEventListener("change", () => {
+    llenarEquipos();
+    document.getElementById("resultado").textContent = "";
+    document.getElementById("estadisticas").innerHTML = "";
+  });
+
+  // Inicializa la app
+  llenarLigas();
+  ligaSelect.value = "La Liga";
+  llenarEquipos();
+</script>
+
 </body>
-</html>
+</html
