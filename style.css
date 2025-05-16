@@ -1,18 +1,33 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  background: #f2f2f2;
+  color: #222;
 }
 
-#app {
-  max-width: 800px;
-  margin: auto;
+header {
+  background-color: #003366;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+select {
+  margin: 10px;
+  padding: 5px;
+}
+
+#partidos-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.partido {
   background: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
-}
-
-select, p {
-  margin: 10px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
