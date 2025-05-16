@@ -1,137 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Predicción de Fútbol - Ligas y Tabla</title>
-<style>
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
-  select, button { font-size: 1rem; padding: 0.3rem; margin: 0.5rem 0; }
-  ul { list-style: none; padding: 0; }
-  li { margin: 0.3rem 0; }
-  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-  th, td { border: 1px solid #ccc; padding: 0.4rem; text-align: center; }
-  th { background: #eee; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Predicción de Fútbol</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<h1>Predicción de Fútbol</h1>
-
-<label for="liga-select">Elige una liga:</label>
-<select id="liga-select">
-  <option value="PD">España - La Liga</option>
-  <option value="BL1">Alemania - Bundesliga</option>
-  <option value="FL1">Francia - Ligue 1</option>
-  <option value="PL">Inglaterra - Premier League</option>
-  <option value="SA">Italia - Serie A</option>
-  <option value="PPL">Portugal - Primeira Liga</option>
-  <option value="EDER">Países Bajos - Eredivisie</option>
-</select>
-
-<button id="cargar-datos">Cargar Equipos y Tabla</button>
-
-<h2>Equipos</h2>
-<ul id="lista-equipos"></ul>
-
-<h2>Tabla de Posiciones</h2>
-<table id="tabla-posiciones">
-  <thead>
-    <tr>
-      <th>Pos</th>
-      <th>Equipo</th>
-      <th>PJ</th>
-      <th>G</th>
-      <th>E</th>
-      <th>P</th>
-      <th>GF</th>
-      <th>GC</th>
-      <th>PTS</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<script>
-  const API_TOKEN = ' 0102ba8c03cf42c1b7b1e9217bc9501e'; // <- Pon tu API key aquí
-
-  const ligaSelect = document.getElementById('liga-select');
-  const btnCargar = document.getElementById('cargar-datos');
-  const listaEquipos = document.getElementById('lista-equipos');
-  const tablaBody = document.querySelector('#tabla-posiciones tbody');
-
-  async function obtenerDatosLiga(codigoLiga) {
-    try {
-      const [resEquipos, resTabla] = await Promise.all([
-        fetch(`https://api.football-data.org/v4/competitions/${codigoLiga}/teams`, {
-          headers: { 'X-Auth-Token': API_TOKEN }
-        }),
-        fetch(`https://api.football-data.org/v4/competitions/${codigoLiga}/standings`, {
-          headers: { 'X-Auth-Token': API_TOKEN }
-        })
-      ]);
-      
-      if (!resEquipos.ok || !resTabla.ok) {
-        throw new Error('Error en la respuesta del API');
-      }
-
-      const dataEquipos = await resEquipos.json();
-      const dataTabla = await resTabla.json();
-
-      return {
-        equipos: dataEquipos.teams,
-        tabla: dataTabla.standings[0].table
-      };
-
-    } catch (error) {
-      alert('Error al obtener datos. Revisa tu API key y conexión.');
-      console.error(error);
-      return null;
-    }
-  }
-
-  function mostrarEquipos(equipos) {
-    listaEquipos.innerHTML = '';
-    equipos.forEach(equipo => {
-      const li = document.createElement('li');
-      li.textContent = equipo.name;
-      listaEquipos.appendChild(li);
-    });
-  }
-
-  function mostrarTabla(tabla) {
-    tablaBody.innerHTML = '';
-    tabla.forEach(fila => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${fila.position}</td>
-        <td>${fila.team.name}</td>
-        <td>${fila.playedGames}</td>
-        <td>${fila.won}</td>
-        <td>${fila.draw}</td>
-        <td>${fila.lost}</td>
-        <td>${fila.goalsFor}</td>
-        <td>${fila.goalsAgainst}</td>
-        <td>${fila.points}</td>
-      `;
-      tablaBody.appendChild(tr);
-    });
-  }
-
-  btnCargar.addEventListener('click', async () => {
-    const liga = ligaSelect.value;
-    btnCargar.disabled = true;
-    btnCargar.textContent = 'Cargando...';
-    const datos = await obtenerDatosLiga(liga);
-    if (datos) {
-      mostrarEquipos(datos.equipos);
-      mostrarTabla(datos.tabla);
-    }
-    btnCargar.textContent = 'Cargar Equipos y Tabla';
-    btnCargar.disabled = false;
-  });
-
-</script>
-
+  <div id="app">
+    <h1>Predicción de Fútbol</h1>
+    <div id="predicciones"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
