@@ -1,41 +1,52 @@
-function cargarPartidosDeHoy() {
-  const API_TOKEN = '0102ba8c03cf42c1b7b1e9217bc9501e'; // <- PON TU API KEY AQUÍ
-  fetch('https://api.football-data.org/v4/matches?dateFrom=today&dateTo=today', {
-    headers: { 'X-Auth-Token': API_TOKEN }
-  })
-  .then(response => response.json())
-  .then(data => {
-    const partidos = data.matches;
-    const container = document.getElementById('app');
-    let partidosDiv = document.getElementById('partidosHoy');
-    if (!partidosDiv) {
-      partidosDiv = document.createElement('div');
-      partidosDiv.id = 'partidosHoy';
-      container.appendChild(partidosDiv);
-    }
-    partidosDiv.innerHTML = '<h2>Partidos de hoy</h2>';
-    if (partidos.length === 0) {
-      partidosDiv.innerHTML += '<p>No hay partidos programados para hoy.</p>';
-      return;
-    }
-    partidos.forEach(partido => {
-      const div = document.createElement('div');
-      div.className = 'partido';
-      div.innerHTML = `
-        <h3>${partido.competition.name}</h3>
-        <p>${partido.homeTeam.name} vs ${partido.awayTeam.name}</p>
-        <p>Hora: ${new Date(partido.utcDate).toLocaleTimeString()}</p>
-        <p>Estado: ${partido.status}</p>
-      `;
-      partidosDiv.appendChild(div);
-    });
-  })
-  .catch(error => {
-    console.error('Error cargando los partidos:', error);
+import equipos from './equipos.json' assert { type: 'json' };
+
+const paisSelector = document.getElementById("selector-pais");
+const ligaSelector = document.getElementById("selector-liga");
+const container = document.getElementById("partidos-container");
+
+function cargarPaises() {
+  const paises = Object.keys(equipos);
+  paises.forEach(pais => {
+    const option = document.createElement("option");
+    option.value = pais;
+    option.textContent = pais;
+    paisSelector.appendChild(option);
   });
 }
 
-cargarPartidosDeHoy();
+function cargarLigas(pais) {
+  ligaSelector.innerHTML = '';
+  equipos[pais].forEach(liga => {
+    const option = document.createElement("option");
+    option.value = liga.codigo;
+    option.textContent = liga.nombre;
+    ligaSelector.appendChild(option);
+  });
+}
+
+function mostrarPartidosFake() {
+  container.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const div = document.createElement("div");
+    div.className = 'partido';
+    div.innerHTML = `
+      <strong>Equipo A</strong> vs <strong>Equipo B</strong><br/>
+      Predicción: <b>1</b> | Goles: 2-1 | Ambos anotan: Sí
+    `;
+    container.appendChild(div);
+  }
+}
+
+paisSelector.addEventListener("change", (e) => {
+  cargarLigas(e.target.value);
+  mostrarPartidosFake();
+});
+
+ligaSelector.addEventListener("change", () => {
+  mostrarPartidosFake(); // Aquí se conecta con la API real
+});
+
+cargarPaises();
 
 
 
