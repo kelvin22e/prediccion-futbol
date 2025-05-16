@@ -9,7 +9,7 @@ fetch('equipos.json')
     ligas.forEach(liga => {
       const option = document.createElement('option');
       option.value = liga;
-      option.textContent = liga;
+      option.textContent = liga.toUpperCase();
       ligaSelect.appendChild(option);
     });
 
@@ -23,7 +23,7 @@ fetch('equipos.json')
     // Mostrar equipos de la liga seleccionada
     function mostrarEquipos() {
       const ligaSeleccionada = ligaSelect.value;
-      equiposDiv.innerHTML = ''; // limpiar
+      equiposDiv.innerHTML = '';
       const equipos = data[ligaSeleccionada];
       equipos.forEach(equipo => {
         const p = document.createElement('p');
@@ -32,11 +32,9 @@ fetch('equipos.json')
       });
     }
 
-    // Evento al cambiar la liga
     ligaSelect.addEventListener('change', mostrarEquipos);
-
-    // Mostrar equipos al cargar la página (primera liga)
-    mostrarEquipos();
+    mostrarEquipos(); // Inicial
   })
   .catch(error => console.error('Error cargando equipos.json:', error));
+
 
