@@ -1,0 +1,22 @@
+export async function obtenerPartidos(ligaCodigo) {
+  const token = "TU_TOKEN_AQUI"; // pon tu token aquí
+  const url = `https://api.football-data.org/v4/competitions/${ligaCodigo}/matches?status=SCHEDULED`;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "X-Auth-Token": token
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data.matches;
+  } catch (error) {
+    console.error("Error al obtener partidos:", error);
+    return [];
+  }
+}
