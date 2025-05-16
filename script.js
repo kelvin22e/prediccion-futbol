@@ -1,153 +1,43 @@
- "espana": [
-    "Alavés",
-    "Athletic Club",
-    "Atlético Madrid",
-    "Barcelona",
-    "Betis",
-    "Cádiz",
-    "Celta Vigo",
-    "Elche",
-    "Espanyol",
-    "Getafe",
-    "Granada",
-    "Levante",
-    "Mallorca",
-    "Osasuna",
-    "Rayo Vallecano",
-    "Real Madrid",
-    "Real Sociedad",
-    "Sevilla",
-    "Valencia",
-    "Villarreal"
-  ],
-  "alemania": [
-    "Bayer Leverkusen",
-    "Bayern Munich",
-    "Bochum",
-    "Borussia Dortmund",
-    "Borussia Mönchengladbach",
-    "Colonia",
-    "Darmstadt",
-    "Eintracht Frankfurt",
-    "Freiburg",
-    "Greuther Fürth",
-    "Hamburgo",
-    "Hannover 96",
-    "Hoffenheim",
-    "Hertha Berlín",
-    "Mainz 05",
-    "RB Leipzig",
-    "Schalke 04",
-    "Stuttgart",
-    "Union Berlín",
-    "Wolfsburgo"
-  ],
-  "francia": [
-    "Angers",
-    "Bordeaux",
-    "Clermont",
-    "Lens",
-    "Lille",
-    "Lorient",
-    "Lyon",
-    "Marseille",
-    "Metz",
-    "Monaco",
-    "Montpellier",
-    "Nantes",
-    "Nice",
-    "Paris Saint-Germain",
-    "Reims",
-    "Rennes",
-    "Strasbourg",
-    "Toulouse",
-    "Troyes",
-    "Auxerre"
-  ],
-  "inglaterra": [
-    "Arsenal",
-    "Aston Villa",
-    "Bournemouth",
-    "Brentford",
-    "Brighton",
-    "Chelsea",
-    "Crystal Palace",
-    "Everton",
-    "Fulham",
-    "Leeds United",
-    "Leicester City",
-    "Liverpool",
-    "Manchester City",
-    "Manchester United",
-    "Newcastle United",
-    "Nottingham Forest",
-    "Southampton",
-    "Tottenham Hotspur",
-    "West Ham United",
-    "Wolverhampton Wanderers"
-  ],
-  "italia": [
-    "Atalanta",
-    "Bologna",
-    "Cremonese",
-    "Empoli",
-    "Fiorentina",
-    "Frosinone",
-    "Genoa",
-    "Inter Milan",
-    "Juventus",
-    "Lazio",
-    "Lecce",
-    "Milan",
-    "Monza",
-    "Napoli",
-    "Roma",
-    "Salernitana",
-    "Sassuolo",
-    "Spezia",
-    "Torino",
-    "Udinese"
-  ],
-  "portugal": [
-    "Benfica",
-    "Braga",
-    "Estoril",
-    "Famalicão",
-    "Gil Vicente",
-    "Portimonense",
-    "Porto",
-    "Santa Clara",
-    "Sporting CP",
-    "Tondela",
-    "Vizela",
-    "Marítimo",
-    "Paços de Ferreira",
-    "Moreirense",
-    "Boavista",
-    "Rio Ave",
-    "Casa Pia",
-    "Chaves"
-  ],
-  "holanda": [
-    "Ajax",
-    "AZ Alkmaar",
-    "Cambuur",
-    "Excelsior",
-    "Feyenoord",
-    "Fortuna Sittard",
-    "Go Ahead Eagles",
-    "Groningen",
-    "Heerenveen",
-    "Heracles Almelo",
-    "NEC Nijmegen",
-    "PEC Zwolle",
-    "Sparta Rotterdam",
-    "Twente",
-    "Utrecht",
-    "Vitesse",
-    "Volendam",
-    "Willem II",
-    "RKC Waalwijk",
-    "FC Emmen"
-  ]
-}
+// script.js
+
+fetch('equipos.json')
+  .then(response => response.json())
+  .then(data => {
+    const ligas = Object.keys(data);
+    const ligaSelect = document.createElement('select');
+    ligaSelect.id = 'ligaSelect';
+
+    // Crear opción por cada liga
+    ligas.forEach(liga => {
+      const option = document.createElement('option');
+      option.value = liga;
+      option.textContent = liga;
+      ligaSelect.appendChild(option);
+    });
+
+    const equiposDiv = document.createElement('div');
+    equiposDiv.id = 'equiposDiv';
+
+    const app = document.getElementById('app');
+    app.appendChild(ligaSelect);
+    app.appendChild(equiposDiv);
+
+    // Mostrar equipos de la liga seleccionada
+    function mostrarEquipos() {
+      const ligaSeleccionada = ligaSelect.value;
+      equiposDiv.innerHTML = ''; // limpiar
+      const equipos = data[ligaSeleccionada];
+      equipos.forEach(equipo => {
+        const p = document.createElement('p');
+        p.textContent = equipo;
+        equiposDiv.appendChild(p);
+      });
+    }
+
+    // Evento al cambiar la liga
+    ligaSelect.addEventListener('change', mostrarEquipos);
+
+    // Mostrar equipos al cargar la página (primera liga)
+    mostrarEquipos();
+  })
+  .catch(error => console.error('Error cargando equipos.json:', error));
