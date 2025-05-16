@@ -1,12 +1,9 @@
-// script.js
-
 fetch('equipos.json')
   .then(response => response.json())
   .then(data => {
     const ligas = Object.keys(data);
     const ligaSelect = document.createElement('select');
     ligaSelect.id = 'ligaSelect';
-    ligaSelect.className = 'selector-ligas';
 
     // Crear opción por cada liga
     ligas.forEach(liga => {
@@ -28,7 +25,6 @@ fetch('equipos.json')
       const ligaSeleccionada = ligaSelect.value;
       equiposDiv.innerHTML = ''; // limpiar
       const equipos = data[ligaSeleccionada];
-
       equipos.forEach(equipo => {
         const p = document.createElement('p');
         p.textContent = equipo;
@@ -43,3 +39,4 @@ fetch('equipos.json')
     mostrarEquipos();
   })
   .catch(error => console.error('Error cargando equipos.json:', error));
+
