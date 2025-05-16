@@ -37,7 +37,7 @@ fetch('equipos.json')
   })
   .catch(error => console.error('Error cargando equipos.json:', error));
 function cargarPartidosDeHoy() {
-  const API_TOKEN = 'TU_API_KEY_AQUI'; // Pon aquí tu token real
+  const API_TOKEN = '0102ba8c03cf42c1b7b1e9217bc9501e'; // Pon aquí tu token real
 
   fetch('https://api.football-data.org/v4/matches?dateFrom=today&dateTo=today', {
     headers: { 'X-Auth-Token': API_TOKEN }
